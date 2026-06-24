@@ -6,6 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.88
 	github.com/gin-gonic/gin v1.12.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
+	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.12.3
 	github.com/vektah/gqlparser/v2 v2.5.32

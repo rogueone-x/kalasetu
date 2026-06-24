@@ -4,6 +4,7 @@ import (
 	"kalasetu/config"
 	"kalasetu/graph"
 	"kalasetu/handlers"
+	"kalasetu/migrations"
 	"kalasetu/repos"
 	"kalasetu/routes"
 	"kalasetu/services"
@@ -43,14 +44,20 @@ func NewApp() *App {
 	db, err := config.InitDB()
 	if err != nil {
 		log.Printf("Warning: Failed to connect to database: %v. Database operations will fail at runtime.", err)
+	} else {
+		// Run database migrations
+		if err := migrations.RunMigrations(db); err != nil {
+			log.Printf("Warning: Failed to run database migrations: %v", err)
+		}
+		log.Printf("Migrations done")
 	}
 
 	userRepo := repos.NewUserRepository(db)
-	authService := services.NewAuthService(userRepo)
+	refreshTokenRepo := repos.NewRefreshTokenRepository(db)
+	authService := services.NewAuthService(userRepo, refreshTokenRepo)
 	authHandler := handlers.NewAuthHandler(authService)
 	routes.RegisterAuthRoutes(r, authHandler)
 
-	
 	resolver := &graph.Resolver{}
 	srv := gqlSetup(resolver)
 

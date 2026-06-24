@@ -6,12 +6,10 @@ meta {
 
 post {
   url: {{base_url}}/auth/refresh
-  body: json
+  body: none
   auth: none
 }
 
-body:json {
-  {
-    "refresh_token": "YOUR_REFRESH_TOKEN_HERE"
-  }
+vars:pre-request {
+  base_url: http://localhost:8080
 }
