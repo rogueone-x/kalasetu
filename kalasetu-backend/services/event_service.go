@@ -33,7 +33,7 @@ func (s *eventService) Create(ctx context.Context, userID int, input models.Crea
 		Name:      input.Name,
 		StartDate: input.StartDate,
 		Duration:  input.Duration,
-		HostID:    userID,
+		HostID:    &userID,
 	})
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (s *eventService) Update(ctx context.Context, userID, id int, input models.
 	if event == nil {
 		return nil, ErrEventNotFound
 	}
-	if event.HostID != userID {
+	if event.HostID == nil || *event.HostID != userID {
 		return nil, ErrForbidden
 	}
 
@@ -83,7 +83,7 @@ func (s *eventService) Delete(ctx context.Context, userID, id int) error {
 	if event == nil {
 		return ErrEventNotFound
 	}
-	if event.HostID != userID {
+	if event.HostID == nil || *event.HostID != userID {
 		return ErrForbidden
 	}
 	return s.eventRepo.Delete(ctx, id)

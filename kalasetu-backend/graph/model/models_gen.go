@@ -13,7 +13,7 @@ type Event struct {
 	Name      string  `json:"name"`
 	StartDate string  `json:"startDate"`
 	Duration  string  `json:"duration"`
-	HostID    string  `json:"hostId"`
+	HostID    *string `json:"hostId,omitempty"`
 	HostName  *string `json:"hostName,omitempty"`
 	CreatedAt string  `json:"createdAt"`
 }

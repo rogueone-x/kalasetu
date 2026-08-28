@@ -19,7 +19,7 @@ type Event {
   name: String!
   startDate: String! # "2006-01-02"
   duration: String! # Postgres interval literal, e.g. "2 days"
-  hostId: ID!
+  hostId: ID
   hostName: String
   createdAt: String! # RFC3339
 }

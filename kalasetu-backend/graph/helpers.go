@@ -33,6 +33,11 @@ func toGraphEvent(e *models.Event) *model.Event {
 	if e == nil {
 		return nil
 	}
+	var hostID *string
+	if e.HostID != nil {
+		id := strconv.Itoa(*e.HostID)
+		hostID = &id
+	}
 	var hostName *string
 	if e.HostName != "" {
 		hostName = &e.HostName
@@ -42,7 +47,7 @@ func toGraphEvent(e *models.Event) *model.Event {
 		Name:      e.Name,
 		StartDate: e.StartDate,
 		Duration:  e.Duration,
-		HostID:    strconv.Itoa(e.HostID),
+		HostID:    hostID,
 		HostName:  hostName,
 		CreatedAt: e.CreatedAt.Format(time.RFC3339),
 	}

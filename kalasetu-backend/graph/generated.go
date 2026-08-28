@@ -527,9 +527,9 @@ func (ec *executionContext) _Event_hostId(ctx context.Context, field graphql.Col
 			return obj.HostID, nil
 		},
 		nil,
-		ec.marshalNID2string,
+		ec.marshalOID2ᚖstring,
 		true,
-		true,
+		false,
 	)
 }
 
@@ -2573,9 +2573,6 @@ func (ec *executionContext) _Event(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "hostId":
 			out.Values[i] = ec._Event_hostId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "hostName":
 			out.Values[i] = ec._Event_hostName(ctx, field, obj)
 		case "createdAt":
@@ -3381,6 +3378,24 @@ func (ec *executionContext) marshalOEvent2ᚖkalasetuᚋgraphᚋmodelᚐEvent(ct
 		return graphql.Null
 	}
 	return ec._Event(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v any) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	_ = sel
+	_ = ctx
+	res := graphql.MarshalID(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v any) (*string, error) {

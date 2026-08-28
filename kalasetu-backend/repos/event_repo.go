@@ -24,7 +24,7 @@ func NewEventRepository(db *sql.DB) EventRepository {
 }
 
 const eventSelectColumns = `
-	e.id, e.name, e.start_date::text, e.duration::text, COALESCE(e.host_id, 0), COALESCE(u.name, ''), e.created_at
+	e.id, e.name, e.start_date::text, e.duration::text, e.host_id, COALESCE(u.name, ''), e.created_at
 `
 
 func (r *eventRepository) Create(ctx context.Context, event *models.Event) (*models.Event, error) {
