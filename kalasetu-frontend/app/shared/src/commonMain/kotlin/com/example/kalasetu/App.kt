@@ -12,6 +12,9 @@ import com.example.kalasetu.theme.KalasetuTheme
 fun App() {
     var screen by remember { mutableStateOf<Screen>(Screen.OnboardingWelcome) }
     var selectedRole by remember { mutableStateOf("") }
+    var userName by remember { mutableStateOf("") }
+    var userLocation by remember { mutableStateOf("") }
+    var currentProfile by remember { mutableStateOf<Profile?>(null) }
 
     KalasetuTheme {
         when (val currentScreen = screen) {
@@ -39,56 +42,57 @@ fun App() {
             )
 
             Screen.OnboardingBasicInfo -> OnboardingBasicInfoScreen(
-                onNext = { role ->
+                onNext = { name, role ->
+                    userName = name
                     selectedRole = role
                     screen = Screen.OnboardingLocation
                 },
-                onBack = { screen = Screen.OnboardingWelcome },
-            )
+            ) { screen = Screen.OnboardingWelcome }
 
             Screen.OnboardingLocation -> OnboardingLocationScreen(
-                onNext = {
+                onNext = { location ->
+                    userLocation = location
                     screen = when (selectedRole) {
                         "Artist"          -> Screen.ArtistExperience
                         "Event Organizer" -> Screen.OrganizerType
                         else              -> Screen.AudienceInterests
                     }
                 },
-                onBack = { screen = Screen.OnboardingBasicInfo },
-            )
+            ) { screen = Screen.OnboardingBasicInfo }
 
             Screen.ArtistExperience -> ExperienceScreen(
                 onNext = { screen = Screen.OnboardingDone },
-                onBack = { screen = Screen.OnboardingLocation },
-            )
+            ) { screen = Screen.OnboardingLocation }
 
             Screen.OrganizerType -> OrganizerTypeScreen(
                 onNext = { screen = Screen.OrganizerIntent },
-                onBack = { screen = Screen.OnboardingLocation },
-            )
+            ) { screen = Screen.OnboardingLocation }
 
             Screen.OrganizerIntent -> OrganizerIntentScreen(
                 onNext = { screen = Screen.OnboardingDone },
-                onBack = { screen = Screen.OrganizerType },
-            )
+            ) { screen = Screen.OrganizerType }
 
             Screen.AudienceInterests -> InterestsScreen(
                 onNext = { screen = Screen.OnboardingDone },
-                onBack = { screen = Screen.OnboardingLocation },
-            )
+            ) { screen = Screen.OnboardingLocation }
 
-            Screen.OnboardingDone -> OnboardingDoneScreen(
-                onFinish = {
-                    // Temporary mock user ID for Profile UI development.
-                    // Replace with the authenticated user ID when registration/auth is integrated.
-                    screen = Screen.Profile(userId = "123")
-                }
-            )
+            Screen.OnboardingDone -> OnboardingDoneScreen {
+                // Temporary mock user ID for Profile UI development.
+                // Replace with the authenticated user ID when registration/auth is integrated.
+                screen = Screen.Profile(userId = "123")
+            }
 
             is Screen.Profile -> {
 
-                val presenter = remember(currentScreen.userId) {
-                    ProfilePresenter(repository = FakeProfileRepository())
+                val presenter = remember(currentScreen.userId, currentProfile) {
+                    ProfilePresenter(
+                        repository = ProfileRepository(
+                            initialProfile = currentProfile ?: Profile(
+                                name = userName,
+                                location = userLocation
+                            )
+                        )
+                    )
                 }
                 ProfileScreen(
                     presenter = presenter,
@@ -99,8 +103,22 @@ fun App() {
             }
 
             is Screen.EditProfile -> {
-                // Placeholder for EditProfileScreen
-                Text("Edit Profile for user ${currentScreen.userId}")
+                val profileToEdit = currentProfile ?: Profile(
+                    id       = currentScreen.userId,
+                    name     = userName,
+                    location = userLocation,
+                    username = "",
+                    email    = "",
+                )
+                EditProfileScreen(
+                    profile = profileToEdit,
+                    onBack  = { screen = Screen.Profile(userId = currentScreen.userId) },
+                    onSave  = { updated ->
+                        currentProfile = updated
+                        userName       = updated.name
+                        screen         = Screen.Profile(userId = currentScreen.userId)
+                    },
+                )
             }
         }
     }

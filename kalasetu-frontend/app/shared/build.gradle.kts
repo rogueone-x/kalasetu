@@ -49,6 +49,9 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.peekaboo.image.picker)
+            implementation(libs.peekaboo.ui)
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
             api(projects.core)
@@ -60,8 +63,14 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.materialIconsCore)
+            implementation(libs.compose.materialIconsExtended)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.coil.compose)
+        }
+        iosMain.dependencies {
+            implementation(libs.peekaboo.image.picker)
+            implementation(libs.peekaboo.ui)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

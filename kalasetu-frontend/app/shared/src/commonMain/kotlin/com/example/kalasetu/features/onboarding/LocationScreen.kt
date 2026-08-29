@@ -20,7 +20,7 @@ import com.example.kalasetu.theme.SubtitleGray
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingLocationScreen(
-    onNext: () -> Unit,
+    onNext: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
@@ -118,7 +118,7 @@ fun OnboardingLocationScreen(
         }
 
         IconButton(
-            onClick = onNext,
+            onClick = { selectedCountry?.let { onNext(it) } },
             enabled = selectedCountry != null,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

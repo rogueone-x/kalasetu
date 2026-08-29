@@ -7,6 +7,7 @@ data class Profile(
     val location: String = "",
     val bio: String = "",
     val avatarUrl: String? = null,
+    val avatarBytes: ByteArray? = null,
     val followers: Int = 0,
     val following: Int = 0,
     val artworksCount: Int = 0,
@@ -15,13 +16,60 @@ data class Profile(
     val isVerified: Boolean = false,
     val skills: List<String> = emptyList(),
     val artworksImages: List<String> = emptyList(),
-    val achievements: List<Achievement> = emptyList()
-)
+    val achievements: List<Achievement> = emptyList(),
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if ((other == null) || (this::class != other::class)) return false
+
+        other as Profile
+
+        if (id != other.id) return false
+        if (name != other.name) return false
+        if (username != other.username) return false
+        if (location != other.location) return false
+        if (bio != other.bio) return false
+        if (avatarUrl != other.avatarUrl) return false
+        if (avatarBytes != null) {
+            if (other.avatarBytes == null) return false
+            if (!avatarBytes.contentEquals(other.avatarBytes)) return false
+        } else if (other.avatarBytes != null) return false
+        if (followers != other.followers) return false
+        if (following != other.following) return false
+        if (artworksCount != other.artworksCount) return false
+        if (totalLikes != other.totalLikes) return false
+        if (email != other.email) return false
+        if (isVerified != other.isVerified) return false
+        if (skills != other.skills) return false
+        if (artworksImages != other.artworksImages) return false
+        return achievements == other.achievements
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = (31 * result) + name.hashCode()
+        result = (31 * result) + username.hashCode()
+        result = (31 * result) + location.hashCode()
+        result = (31 * result) + bio.hashCode()
+        result = (31 * result) + (avatarUrl?.hashCode() ?: 0)
+        result = (31 * result) + (avatarBytes?.contentHashCode() ?: 0)
+        result = (31 * result) + followers
+        result = (31 * result) + following
+        result = (31 * result) + artworksCount
+        result = (31 * result) + totalLikes
+        result = (31 * result) + email.hashCode()
+        result = (31 * result) + isVerified.hashCode()
+        result = (31 * result) + skills.hashCode()
+        result = (31 * result) + artworksImages.hashCode()
+        result = (31 * result) + achievements.hashCode()
+        return result
+    }
+}
 
 data class Achievement(
     val title: String,
     val description: String,
-    val iconType: AchievementIcon = AchievementIcon.TOP_CREATOR
+    val iconType: AchievementIcon = AchievementIcon.TOP_CREATOR,
 )
 
 enum class AchievementIcon {
@@ -36,7 +84,7 @@ data class ProfileUiState(
     val isLoading: Boolean = false,
     val profile: Profile? = null,
     val error: String? = null,
-    val selectedTab: ProfileTab = ProfileTab.ACHIEVEMENTS
+    val selectedTab: ProfileTab = ProfileTab.ACHIEVEMENTS,
 )
 
 fun String.toInitials(): String {
@@ -57,12 +105,12 @@ fun Int.toDisplayCount(): String = when {
     this >= 1_000_000 -> {
         val m = this / 1_000_000.0
         val s = (m * 10).toInt()
-        if (s % 10 == 0) "${s / 10}M" else "${s / 10}.${s % 10}M"
+        if ((s % 10) == 0) "${s / 10}M" else "${s / 10}.${s % 10}M"
     }
     this >= 1_000 -> {
         val k = this / 1_000.0
         val s = (k * 10).toInt()
-        if (s % 10 == 0) "${s / 10}K" else "${s / 10}.${s % 10}K"
+        if ((s % 10) == 0) "${s / 10}K" else "${s / 10}.${s % 10}K"
     }
     else -> this.toString()
 }

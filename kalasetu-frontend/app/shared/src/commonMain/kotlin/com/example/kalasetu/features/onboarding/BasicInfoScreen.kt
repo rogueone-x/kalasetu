@@ -19,7 +19,7 @@ import com.example.kalasetu.theme.SubtitleGray
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingBasicInfoScreen(
-    onNext: (String) -> Unit,
+    onNext: (String, String) -> Unit,
     onBack: () -> Unit,
 ) {
     var name by remember { mutableStateOf("") }
@@ -121,7 +121,7 @@ fun OnboardingBasicInfoScreen(
         IconButton(
             onClick = {
                 if (name.isNotBlank() && selectedRole.isNotBlank()) {
-                    onNext(selectedRole)
+                    onNext(name, selectedRole)
                 }
             },
             modifier = Modifier

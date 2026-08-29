@@ -53,7 +53,7 @@ fun ProfileScreen(
         }
     }
 
-    LaunchedEffect(userId) {
+    LaunchedEffect(userId, presenter) {
         presenter.attachView(view)
         presenter.loadProfile(userId)
     }

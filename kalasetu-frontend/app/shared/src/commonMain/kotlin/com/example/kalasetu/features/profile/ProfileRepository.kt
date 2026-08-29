@@ -1,8 +1,10 @@
 package com.example.kalasetu.features.profile
 
-open class FakeProfileRepository : ProfileRepositoryContract {
+open class ProfileRepository(
+    private val initialProfile: Profile? = null
+) : ProfileRepositoryContract {
     override suspend fun fetchProfile(userId: String): Profile {
-        return Profile(
+        val baseProfile = Profile(
             id = userId,
             name = "Sarah Anderson",
             username = "sarahart",
@@ -30,5 +32,19 @@ open class FakeProfileRepository : ProfileRepositoryContract {
                 Achievement(" Featured Artist", "Featured in monthly showcase")
             )
         )
+
+        return if (initialProfile != null) {
+            baseProfile.copy(
+                name = initialProfile.name,
+                username = initialProfile.username,
+                location = initialProfile.location,
+                bio = initialProfile.bio,
+                email = initialProfile.email,
+                avatarUrl = initialProfile.avatarUrl,
+                avatarBytes = initialProfile.avatarBytes
+            )
+        } else {
+            baseProfile
+        }
     }
 }

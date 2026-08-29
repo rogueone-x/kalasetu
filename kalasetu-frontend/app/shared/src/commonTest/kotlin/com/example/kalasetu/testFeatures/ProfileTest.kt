@@ -159,7 +159,7 @@ class ProfileUiStateTest {
 
 class ProfileRepositoryTest {
 
-    private val repository = FakeProfileRepository()
+    private val repository = ProfileRepository()
 
     @Test
     fun repository_fetchReturnsProfile(): TestResult = runTest {
@@ -232,14 +232,14 @@ class ProfilePresenterTest {
 
     private class FakeRepository(
         private val shouldFail: Boolean = false,
-    ) : FakeProfileRepository() {
+    ) : ProfileRepository() {
         override suspend fun fetchProfile(userId: String): Profile {
             if (shouldFail) throw Exception("Network error")
             return Profile(
                 id       = userId,
                 name     = "Test User",
                 username = "testuser",
-                email    = "test@test.com"
+                email    = "test@test.com",
             )
         }
     }

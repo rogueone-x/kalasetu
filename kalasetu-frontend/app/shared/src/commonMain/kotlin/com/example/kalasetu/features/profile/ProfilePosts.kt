@@ -57,7 +57,7 @@ fun PostsTabContent(profile: Profile) {
             content = "Thrilled to share that my artwork has been selected for the Digital Arts Monthly showcase!",
             likes = 342,
             comments = 47,
-            hasImage = false
+            hasImage = false,
         ),
         DraftPost(
             timeAgo = "2 weeks ago",
@@ -113,7 +113,8 @@ fun PostCard(
             ) {
                 ProfileAvatar(
                     initials = profile.name.toInitials(),
-                    imageUrl = profile.avatarUrl
+                    imageUrl = profile.avatarUrl,
+                    avatarBytes = profile.avatarBytes
                 )
 
                 Spacer(Modifier.width(10.dp))
